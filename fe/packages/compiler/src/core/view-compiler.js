@@ -1742,9 +1742,16 @@ function getProps(attrs, tag, components) {
 			}
 		}
 		else if (isWrappedByBraces(value)) {
-			const pVal = tag === 'template' && name === 'data'
+			let pVal = tag === 'template' && name === 'data'
 				? parseTemplateDataExp(value)
 				: parseSafeBraceExp(value)
+			// WXML Boolean bindings use the expression's truthiness. Vue treats a
+			// dynamic empty string as a present Boolean prop (true), so normalize
+			// built-in button flags before they cross that component boundary.
+			// Static presence and user-defined component property types stay intact.
+			if (!isCustomComponent && tag === 'button' && ['disabled', 'loading', 'plain'].includes(name)) {
+				pVal = `!!(${pVal})`
+			}
 
 			// 如果是自定义组件的属性绑定，记录绑定关系
 			if (isCustomComponent) {

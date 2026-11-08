@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import vm from 'node:vm'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('mini-program template semantics', () => {
@@ -69,6 +70,39 @@ describe('mini-program template semantics', () => {
 
 		expect(output).toContain('\\u6210\\u529F')
 		expect(output).toContain('\\u5931\\u8D25')
+	})
+
+	it('coerces dynamic built-in button Boolean props without Vue empty-string presence casting', async () => {
+		const output = await compilePage('<button disabled="{{!preview || loading || error}}" loading="{{busy}}" plain="{{outlined}}"/>', { usingComponents: {}, componentFixtures: [] })
+		let definition
+		let button
+		const createNode = (type, props, children) => {
+			const node = { type, props }
+			if (type === 'dd-button') button = node
+			children?.default?.()
+			return node
+		}
+		vm.runInNewContext(output, {
+			modDefine(_id, factory) { factory({}, {}, {}) },
+			Module(value) { definition = value },
+			_resolveComponent: name => name,
+			_resolveDirective: name => name,
+			_openBlock() {},
+			_createBlock: createNode,
+			_createVNode: createNode,
+			_withDirectives: node => node,
+			_withCtx: callback => callback,
+		})
+		for (const error of ['', false, 0, null, undefined]) {
+			definition.render({ preview: {}, loading: false, error, busy: '', outlined: '' }, {})
+			expect(button.props.disabled).toBe(false)
+			expect(button.props.loading).toBe(false)
+			expect(button.props.plain).toBe(false)
+		}
+		definition.render({ preview: {}, loading: false, error: 'offline', busy: true, outlined: true }, {})
+		expect(button.props.disabled).toBe(true)
+		definition.render({ preview: null, loading: false, error: '', busy: false, outlined: false }, {})
+		expect(button.props.disabled).toBe(true)
 	})
 
 	it('evaluates wx:if inside the wx:for item scope', async () => {
