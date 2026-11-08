@@ -1,5 +1,5 @@
-import { createContainer } from '@dimina/fe-container-sdk'
-import '@dimina/fe-container-sdk/style.css'
+import { createContainer } from '@xfun/container-sdk'
+import '@xfun/container-sdk/style.css'
 
 const APP_ID = 'wxbench00000000001'
 const ENTRY = 'pages/benchmark/index'

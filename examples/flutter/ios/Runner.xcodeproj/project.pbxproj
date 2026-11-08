@@ -652,10 +652,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = FlutterGeneratedPluginSwiftPackage;
 		};
-		D1A000032F00000000000003 /* Dimina */ = {
+		D1A000032F00000000000003 /* XFunSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D1A000022F00000000000002 /* XCLocalSwiftPackageReference "../../.." */;
-			productName = Dimina;
+			productName = XFunSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

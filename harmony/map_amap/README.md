@@ -3,12 +3,12 @@
 为 Dimina 提供可选的高德原生地图能力。请安装与 Dimina SDK 版本一致的适配器：
 
 ```sh
-ohpm install @didi-dimina/map-amap
+ohpm install @xfun/map-amap
 ```
 
 ```ts
-import { DMPMapProviders } from '@didi-dimina/dimina';
-import { DMPAMapProvider } from '@didi-dimina/map-amap';
+import { DMPMapProviders } from '@xfun/sdk';
+import { DMPAMapProvider } from '@xfun/map-amap';
 
 DMPMapProviders.register('amap', new DMPAMapProvider(context, apiKey, () => privacyConsentGranted));
 ```

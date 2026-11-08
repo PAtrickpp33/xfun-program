@@ -1,7 +1,7 @@
 import { UIContext } from '@kit.ArkUI'
 import { ArrayList } from '@kit.ArkTS'
 import { common, abilityAccessCtrl, Permissions } from '@kit.AbilityKit'
-import { DMPNativeMapProvider, DMPNativeMapHandle, DMPNativeMapEvents, DMPMap } from '@didi-dimina/dimina'
+import { DMPNativeMapProvider, DMPNativeMapHandle, DMPNativeMapEvents, DMPMap } from '@xfun/sdk'
 import { AMapPrivacyAgreeStatus, AMapPrivacyInfoStatus, AMapPrivacyShowStatus } from '@amap/amap_lbs_common'
 import { AMap, MapsInitializer, MapView, MapViewComponent, MapViewManager, MapViewCreateCallback,
   CameraUpdateFactory, CameraPosition, OnCameraChangeListener, LatLng, LatLngBounds, Marker, MarkerOptions, Point, Polyline, PolylineOptions, PolygonOptions, CircleOptions } from '@amap/amap_lbs_map3d'

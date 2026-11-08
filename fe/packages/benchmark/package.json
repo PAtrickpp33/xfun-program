@@ -6,7 +6,7 @@
     "node": ">=22.22.3"
   },
   "scripts": {
-    "prepare:runtime": "pnpm --filter @dimina/fe-container-sdk... build --mode development",
+    "prepare:runtime": "pnpm --filter @xfun/container-sdk... build --mode development",
     "compile:miniapp": "node ./scripts/compile-miniapp.mjs",
     "predev": "pnpm run prepare:runtime && pnpm run compile:miniapp",
     "dev": "vite --config ./vite.config.mjs",
@@ -15,7 +15,7 @@
     "compare": "node ./runner/compare.js"
   },
   "dependencies": {
-    "@dimina/fe-container-sdk": "workspace:^"
+    "@xfun/container-sdk": "workspace:^"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.0",

@@ -1,5 +1,5 @@
 // Generated from docs/API-Reference.md.
-// Keep this file in sync by running: pnpm --filter @dimina/compiler sync:compat
+// Keep this file in sync by running: pnpm --filter @xfun/compiler sync:compat
 
 const supportedBuiltinComponents = [
 	"block",

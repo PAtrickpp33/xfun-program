@@ -117,7 +117,7 @@ pnpm compile --force
 
 ## 依赖与验证
 
-Less、Sass 和 esbuild 已列入 `@dimina/compiler` 的运行依赖，业务项目无需重复声明。实际版本以 `packages/compiler/package.json` 和 `pnpm-lock.yaml` 为准。
+Less、Sass 和 esbuild 已列入 `@xfun/compiler` 的运行依赖，业务项目无需重复声明。实际版本以 `packages/compiler/package.json` 和 `pnpm-lock.yaml` 为准。
 
 相关测试：
 

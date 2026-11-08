@@ -10,7 +10,7 @@ core = json.loads((root / "dimina/oh-package.json5").read_text())
 archive = Path(sys.argv[1]) if len(sys.argv) > 1 else root / "map_amap/build/default/outputs/default/map_amap.har"
 with tarfile.open(archive) as har:
     metadata = json.load(har.extractfile("package/oh-package.json5"))
-    assert metadata["name"] == "@didi-dimina/map-amap"
+    assert metadata["name"] == "@xfun/map-amap"
     assert metadata["version"] == core["version"], "adapter and core versions must match"
     author = metadata.get("author")
     assert isinstance(author, dict) and isinstance(author.get("name"), str) and author["name"].strip(), "missing or invalid package author"

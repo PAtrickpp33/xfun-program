@@ -8,7 +8,7 @@ import {
   DMPOpenType,
   DMPColorUtils,
   DMPMap
-} from '@didi-dimina/dimina';
+} from '@xfun/sdk';
 import { common } from '@kit.AbilityKit';
 import { MiniProgramDataSource, MiniProgramModel } from './data/MiniProgramDataSource';
 import { util } from '@kit.ArkTS';

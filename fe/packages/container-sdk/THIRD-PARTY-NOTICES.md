@@ -1,6 +1,6 @@
 # Third-party notices
 
-This notice covers the Brotli JavaScript decoder distributed with `@dimina/fe-container-sdk`.
+This notice covers the Brotli JavaScript decoder distributed with `@xfun/container-sdk`.
 
 ## brotli-compress 2.2.2
 

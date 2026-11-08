@@ -2,8 +2,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { installDemoMapConfig } from '../src/mapConfig'
 
-vi.mock('@dimina/fe-container-sdk/pageFrame', () => ({}))
-vi.mock('@dimina/fe-container-sdk/pageFrame.css', () => ({}))
+vi.mock('@xfun/container-sdk/pageFrame', () => ({}))
+vi.mock('@xfun/container-sdk/pageFrame.css', () => ({}))
 
 const configured = {
 	VITE_AMAP_WEB_KEY: 'test-web-key',

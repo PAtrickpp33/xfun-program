@@ -5,7 +5,7 @@ import {
   DMPAppManager,
   DMPLaunchConfig,
   DMPOpenType
-} from '@didi-dimina/dimina';
+} from '@xfun/sdk';
 
 export class DiminaFlutterHost {
   private static context?: common.UIAbilityContext;

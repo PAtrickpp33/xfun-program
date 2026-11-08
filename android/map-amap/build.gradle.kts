@@ -34,7 +34,7 @@ afterEvaluate {
             create<MavenPublication>("release") {
                 from(components["release"])
                 groupId = project.property("DIMINA_GROUP_ID") as String
-                artifactId = "map-amap"
+                artifactId = "xfun-map-amap"
                 version = project.property("DIMINA_VERSION") as String
                 pom {
                     name.set("Dimina AMap Adapter")

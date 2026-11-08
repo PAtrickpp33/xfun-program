@@ -1,4 +1,4 @@
-# @dimina/fe-container-sdk
+# @xfun/container-sdk
 
 Web 端小程序容器运行时 SDK：管理小程序的启动、导航栈与生命周期。
 
@@ -9,12 +9,12 @@ Web 端小程序容器运行时 SDK：管理小程序的启动、导航栈与生
 ## 快速开始
 
 ```bash
-npm install @dimina/fe-container-sdk
+npm install @xfun/container-sdk
 ```
 
 ```js
-import { createContainer } from '@dimina/fe-container-sdk'
-import '@dimina/fe-container-sdk/style.css' // 容器视图结构样式（导航栏/页面栈/动画），必须显式引入
+import { createContainer } from '@xfun/container-sdk'
+import '@xfun/container-sdk/style.css' // 容器视图结构样式（导航栏/页面栈/动画），必须显式引入
 
 const container = createContainer({
 	mount: document.getElementById('root'), // 必填：容器根元素
@@ -60,7 +60,7 @@ resourceBaseUrl/
 
 `resourceBaseUrl` 目录下需提供一个 `pageFrame.html`：
 
-- 脚本入口 `import` 本包的 `@dimina/fe-container-sdk/pageFrame` 与 `@dimina/fe-container-sdk/pageFrame.css`。
+- 脚本入口 `import` 本包的 `@xfun/container-sdk/pageFrame` 与 `@xfun/container-sdk/pageFrame.css`。
 - 参考实现见 `fe/packages/container/src/pageFrameEntry.js` + 同目录 `pageFrame.html`。
 - 该子路径入口仅提供 ESM，只会以 `<script type="module">` 形式在 iframe 里加载。
 
@@ -143,7 +143,7 @@ const container = createContainer({
 不想自己实现 shell 适配器时，用 `createDefaultShell()`：渲染一条极简无品牌状态栏（默认 44px 高、显示 HH:MM 时间、随页面 `navigationBarTextStyle` 切换深浅色），并实现好 `getStatusBarRect` / `updateStatusBarColor`：
 
 ```js
-import { createContainer, createDefaultShell } from '@dimina/fe-container-sdk'
+import { createContainer, createDefaultShell } from '@xfun/container-sdk'
 
 const shell = createDefaultShell({ mount: document.getElementById('shell-host') })
 const container = createContainer({ mount: document.getElementById('root'), shell })

@@ -1,5 +1,5 @@
-import { createContainer, QueryRouter } from '@dimina/fe-container-sdk'
-import '@dimina/fe-container-sdk/style.css'
+import { createContainer, QueryRouter } from '@xfun/container-sdk'
+import '@xfun/container-sdk/style.css'
 import { AppList } from '@/pages/appList/appList'
 import { Device } from '@/pages/device/device'
 import { getMiniAppInfo, manifestInfoCache, resolveManifestResourceBaseUrl } from '@/services'

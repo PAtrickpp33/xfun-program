@@ -129,12 +129,12 @@ fun MediaPickerRoot(
                     capture = {
                         if (type == MediaType.CAMERA) {
                             val photoFile = File.createTempFile("IMG_${System.currentTimeMillis()}", ".jpg", context.cacheDir)
-                            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", photoFile)
+                            val uri = FileProvider.getUriForFile(context, "${context.packageName}.xfun.fileprovider", photoFile)
                             cameraUri = uri
                             cameraLauncher.launch(uri)
                         } else {
                             val videoFile = File.createTempFile("VID_${System.currentTimeMillis()}", ".mp4", context.cacheDir)
-                            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", videoFile)
+                            val uri = FileProvider.getUriForFile(context, "${context.packageName}.xfun.fileprovider", videoFile)
                             videoCameraUri = uri
                             videoCameraLauncher.launch(VideoCaptureRequest(uri, videoCaptureOptions))
                         }

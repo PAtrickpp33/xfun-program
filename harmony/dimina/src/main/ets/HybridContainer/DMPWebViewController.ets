@@ -63,7 +63,7 @@ export class DMPWebViewController extends web_webview.WebviewController {
 
   //公共配置
   initConfig() {
-    this.setCustomUserAgent(`${this.getUserAgent()} dimina miniProgram ${this.app.appConfig?.userAgent ?? ''}`);
+    this.setCustomUserAgent(`${this.getUserAgent()} XFunMiniProgram miniProgram ${this.app.appConfig?.userAgent ?? ''}`);
   }
 
   loadPath(): string {

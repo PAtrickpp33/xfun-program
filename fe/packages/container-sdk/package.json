@@ -1,7 +1,7 @@
 {
-	"name": "@dimina/fe-container-sdk",
-	"author": "doslin",
-	"description": "Web 端小程序容器运行时 SDK",
+	"name": "@xfun/container-sdk",
+	"author": "PAtrickpp33",
+	"description": "XFun Web 端小程序容器运行时 SDK（基于 didi/dimina 修改）",
 	"type": "module",
 	"engines": {
 		"node": ">=22.22.3"

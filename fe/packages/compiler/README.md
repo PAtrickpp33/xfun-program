@@ -1,6 +1,6 @@
 # 星河小程序编译工具
 
-[![npm version](https://img.shields.io/npm/v/@dimina/compiler.svg?style=flat)](https://www.npmjs.com/package/@dimina/compiler)
+[![npm version](https://img.shields.io/npm/v/@xfun/compiler.svg?style=flat)](https://www.npmjs.com/package/@xfun/compiler)
 
 ## 编译工具
 
@@ -11,13 +11,13 @@
 运行环境要求 Node.js 22.22.3 或更高版本。编译器仅发布 ESM 产物。
 
 ```sh
-npm install @dimina/compiler -g
+npm install @xfun/compiler -g
 ```
 
 或者在项目中本地安装：
 
 ```sh
-npm install @dimina/compiler --save-dev
+npm install @xfun/compiler --save-dev
 ```
 
 ### 使用 npx 执行
@@ -26,7 +26,7 @@ npm install @dimina/compiler --save-dev
 
 ```sh
 # 使用 npx 执行编译命令
-npx @dimina/compiler build [选项]
+npx @xfun/compiler build [选项]
 ```
 
 对于项目中已安装的情况，可以在 package.json 的 scripts 中添加：
@@ -161,7 +161,7 @@ DIMINA_COMPILER_WORKER_MEMORY_MB=1024 dmcc build
 编译器内置识别 `wx*`（`.wxml/.wxss/.wxs`）与 `dd*`（`.ddml/.ddss`）系扩展名。通过编程入口 `build()` 的 `options.fileTypes`，可在内置之上**追加**自定义品牌扩展名（如 `.qdml/.qdss/.qds`），使其与对应内置类型等价编译：
 
 ```js
-import build from '@dimina/compiler'
+import build from '@xfun/compiler'
 
 await build(targetPath, workPath, true, {
   fileTypes: {

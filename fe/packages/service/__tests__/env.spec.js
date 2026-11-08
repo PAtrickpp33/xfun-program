@@ -44,7 +44,7 @@ describe('env.js API namespace registration', () => {
 		vi.stubGlobal('navigator', undefined)
 		try {
 			await import('../src/core/env.js')
-			expect(globalThis.navigator.userAgent).toBe('Dimina')
+			expect(globalThis.navigator.userAgent).toBe('XFunMiniProgram')
 		} finally { vi.unstubAllGlobals() }
 	})
 

@@ -1,6 +1,6 @@
 import { common } from '@kit.AbilityKit';
 import { FlutterPage } from '@ohos/flutter_ohos';
-import { DMPPage, DMPPhotoPreview } from '@didi-dimina/dimina';
+import { DMPPage, DMPPhotoPreview } from '@xfun/sdk';
 import { DiminaFlutterHost } from '../host/DiminaFlutterHost';
 
 const storage = LocalStorage.getShared();

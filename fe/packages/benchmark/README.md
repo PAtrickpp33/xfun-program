@@ -59,7 +59,7 @@ pnpm --filter @dimina/benchmark dev
 
 `predev` does two things automatically:
 
-1. builds the current `@dimina/fe-container-sdk` dependency graph in development mode;
+1. builds the current `@xfun/container-sdk` dependency graph in development mode;
 2. compiles `packages/benchmark/miniapp` with Dimina's current compiler into
    `packages/benchmark/web/public/miniapp`.
 

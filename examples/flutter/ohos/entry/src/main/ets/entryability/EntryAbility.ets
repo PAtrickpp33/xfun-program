@@ -1,8 +1,8 @@
 import { common } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
 import { FlutterAbility, FlutterEngine } from '@ohos/flutter_ohos';
-import { DMPApp } from '@didi-dimina/dimina';
-import { DMPEntryContext } from '@didi-dimina/dimina/src/main/ets/DApp/config/DMPEntryContext';
+import { DMPApp } from '@xfun/sdk';
+import { DMPEntryContext } from '@xfun/sdk/src/main/ets/DApp/config/DMPEntryContext';
 import { GeneratedPluginRegistrant } from '../plugins/GeneratedPluginRegistrant';
 import DiminaFlutterPlugin from '../plugin/DiminaFlutterPlugin';
 

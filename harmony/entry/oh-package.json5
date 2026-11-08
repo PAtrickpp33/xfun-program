@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@didi-dimina/dimina": "file:../dimina",
+    "@xfun/sdk": "file:../dimina",
     "libdimina.so": "file:../dimina/src/main/cpp/types/libdimina"
   }
 }

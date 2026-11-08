@@ -257,7 +257,7 @@ class FileApi : BaseApiHandler() {
                 ?: "application/octet-stream"
             val uri = FileProvider.getUriForFile(
                 activity,
-                "${activity.packageName}.fileprovider",
+                "${activity.packageName}.xfun.fileprovider",
                 file,
             )
             val intent = Intent(Intent.ACTION_VIEW).apply {

@@ -27,9 +27,9 @@ export default defineConfig(({ command, mode }) => {
 					? [
 						// container 的源码入口会同时导入 SDK 脚本与对应 CSS；映射到同一个
 						// 源码入口可复用入口自身的 SCSS 副作用，并由 Vite 去重模块执行。
-						{ find: /^@dimina\/fe-container-sdk\/pageFrame(?:\.css)?$/, replacement: pageFrameEntry },
-						{ find: /^@dimina\/fe-container-sdk\/style\.css$/, replacement: containerSdkEntry },
-						{ find: /^@dimina\/fe-container-sdk$/, replacement: containerSdkEntry },
+						{ find: /^@xfun\/container-sdk\/pageFrame(?:\.css)?$/, replacement: pageFrameEntry },
+						{ find: /^@xfun\/container-sdk\/style\.css$/, replacement: containerSdkEntry },
+						{ find: /^@xfun\/container-sdk$/, replacement: containerSdkEntry },
 					]
 					: []),
 				{ find: '@', replacement: resolve(import.meta.dirname, 'src') },

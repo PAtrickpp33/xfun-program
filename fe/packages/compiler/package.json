@@ -1,7 +1,7 @@
 {
-	"name": "@dimina/compiler",
-	"version": "1.2.2",
-	"description": "星河编译工具",
+	"name": "@xfun/compiler",
+	"version": "1.0.0",
+	"description": "XFun 小程序编译工具（基于 didi/dimina 修改）",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
 	"type": "module",
@@ -15,6 +15,7 @@
 		"./style-compiler": "./dist/core/style-compiler.js"
 	},
 	"bin": {
+		"xfun-cc": "dist/bin/index.js",
 		"dmcc": "dist/bin/index.js"
 	},
 	"scripts": {
@@ -31,17 +32,16 @@
 		"release:beta": "npm version prerelease --preid=beta && npm publish --tag beta",
 		"release": "npm version patch && npm publish"
 	},
-	"author": "doslin",
+	"author": "PAtrickpp33",
 	"license": "Apache-2.0",
 	"engines": {
 		"node": ">=22.22.3"
 	},
 	"keywords": [
-		"dimina",
+		"xfun",
 		"compiler",
 		"miniapp",
-		"小程序",
-		"星河"
+		"小程序"
 	],
 	"dependencies": {
 		"@vue/compiler-sfc": "^3.5.43",
@@ -66,5 +66,10 @@
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/",
 		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/PAtrickpp33/xfun-program.git",
+		"directory": "fe/packages/compiler"
 	}
 }

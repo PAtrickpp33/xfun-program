@@ -35,7 +35,7 @@ importers:
 
   packages/benchmark:
     dependencies:
-      '@dimina/fe-container-sdk':
+      '@xfun/container-sdk':
         specifier: workspace:^
         version: link:../container-sdk
     devDependencies:
@@ -126,7 +126,7 @@ importers:
 
   packages/container:
     dependencies:
-      '@dimina/fe-container-sdk':
+      '@xfun/container-sdk':
         specifier: workspace:^
         version: link:../container-sdk
     devDependencies:

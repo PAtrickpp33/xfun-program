@@ -19,7 +19,7 @@ pluginManagement {
 
 includeBuild(file("../../../android")) {
     dependencySubstitution {
-        substitute(module("com.github.didi.dimina:dimina"))
+        substitute(module("io.xfun:xfun-sdk"))
             .using(project(":dimina"))
     }
 }

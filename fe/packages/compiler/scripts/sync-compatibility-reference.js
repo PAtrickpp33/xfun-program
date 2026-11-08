@@ -18,7 +18,7 @@ const reference = {
 }
 
 const output = `// Generated from docs/API-Reference.md.
-// Keep this file in sync by running: pnpm --filter @dimina/compiler sync:compat
+// Keep this file in sync by running: pnpm --filter @xfun/compiler sync:compat
 
 const supportedBuiltinComponents = ${formatArray(reference.supportedBuiltinComponents)}
 
@@ -38,7 +38,7 @@ const summary = `${reference.supportedBuiltinComponents.length} components, ${re
 if (checkOnly) {
 	if (currentOutput !== output) {
 		console.error(`[compat] Out of sync: ${sourceLabel} -> ${outputLabel}`)
-		console.error('[compat] Run: pnpm --filter @dimina/compiler sync:compat')
+		console.error('[compat] Run: pnpm --filter @xfun/compiler sync:compat')
 		process.exitCode = 1
 	}
 	else {

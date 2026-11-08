@@ -426,7 +426,7 @@ class NativeComponentHost(
                 loadWithOverviewMode = true
                 useWideViewPort = true
                 mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
-                userAgentString = "$userAgentString dimina miniProgram"
+                userAgentString = "$userAgentString XFunMiniProgram/${com.didi.dimina.BuildConfig.SDK_VERSION} miniProgram"
             }
             addJavascriptInterface(
                 EmbeddedWebViewBridge { message -> embeddedMessageHandler(message) },

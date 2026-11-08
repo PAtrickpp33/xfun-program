@@ -19,7 +19,7 @@ function closest(node, className) {
 
 export class AppList {
 	/**
-	 * @param {ReturnType<typeof import('@dimina/fe-container-sdk').createContainer>} container
+	 * @param {ReturnType<typeof import('@xfun/container-sdk').createContainer>} container
 	 */
 	constructor(container) {
 		this.container = container

@@ -14,7 +14,7 @@
 	right: 0;
 	z-index: 1;
 	background-color: #000;
-	// 独立消费方（README quick-start `import '@dimina/fe-container-sdk/style.css'`）
+	// 独立消费方（README quick-start `import '@xfun/container-sdk/style.css'`）
 	// 未装载 container demo 的 app.scss 时，这个自定义属性在作用域内无值——
 	// transition 的 duration 分量非法，浏览器不会跑 transition，
 	// waitTransitionEnd() 永远吃 WAIT_TRANSITION_TIMEOUT_MS 兜底而非真实 transitionend。

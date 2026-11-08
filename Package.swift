@@ -2,16 +2,16 @@
 import PackageDescription
 
 let package = Package(
-    name: "Dimina",
+    name: "XFunSDK",
     platforms: [
         .iOS(.v14)
     ],
     products: [
         .library(
-            name: "Dimina",
+            name: "XFunSDK",
             targets: ["Dimina"]
         ),
-        .library(name: "DiminaMapAMap", targets: ["DiminaMapAMap"])
+        .library(name: "XFunMapAMap", targets: ["DiminaMapAMap"])
     ],
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire.git", exact: "5.12.0"),

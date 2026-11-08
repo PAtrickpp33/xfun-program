@@ -3,10 +3,10 @@ import assert from 'node:assert/strict'
 import packageJson from '../package.json' with { type: 'json' }
 
 const publicEntries = [
-	'@dimina/compiler',
-	'@dimina/compiler/view-compiler',
-	'@dimina/compiler/logic-compiler',
-	'@dimina/compiler/style-compiler',
+	'@xfun/compiler',
+	'@xfun/compiler/view-compiler',
+	'@xfun/compiler/logic-compiler',
+	'@xfun/compiler/style-compiler',
 ]
 
 for (const entry of publicEntries) {

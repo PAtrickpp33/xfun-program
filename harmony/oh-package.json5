@@ -8,6 +8,6 @@
   },
   "dynamicDependencies": {},
   "overrides": {
-    "@didi-dimina/dimina": "file:./dimina"
+    "@xfun/sdk": "file:./dimina"
   }
 }

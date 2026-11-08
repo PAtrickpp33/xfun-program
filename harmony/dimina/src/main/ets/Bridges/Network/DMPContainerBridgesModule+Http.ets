@@ -4,7 +4,7 @@ import { DMPContainerBridgesModule } from '../DMPContainerBridgesModule';
 import { DMPBridgeCallback, DMPBridgeCallbackType } from '../DMPTSUtil';
 import { BusinessError, request } from '@kit.BasicServicesKit';
 import { http } from '@kit.NetworkKit';
-import { DMPMap } from '@didi-dimina/dimina/ets/Utils/DMPMap';
+import { DMPMap } from '@xfun/sdk/ets/Utils/DMPMap';
 import { DMPContextUtils } from '../../Utils/DMPContextUtils';
 import { DMPFileUrlConvertor } from '../../Bundle/Util/DMPFileUrlConvertor';
 import { DMPFilePathResolver } from '../../Bundle/Util/DMPFilePathResolver';

@@ -57,7 +57,7 @@ flutter {
 
 dependencies {
     // Replaced with the repository's android/:dimina project by settings.gradle.kts.
-    implementation("com.github.didi.dimina:dimina:latest.release")
+    implementation("io.xfun:xfun-sdk:latest.release")
 }
 
 android.sourceSets.named("main") {

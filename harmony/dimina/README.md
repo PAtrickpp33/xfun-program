@@ -12,7 +12,7 @@ Dimina Harmony SDK 用于在 HarmonyOS 应用中加载和运行小程序，并�
 ### 步骤 1：安装 SDK
 
 ```sh
-ohpm install @didi-dimina/dimina
+ohpm install @xfun/sdk
 ```
 
 ### 步骤 2：初始化

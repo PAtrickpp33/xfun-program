@@ -1,21 +1,20 @@
 {
-  "name": "@didi-dimina/map-amap",
-  "version": "1.8.0",
-  "description": "Dimina optional AMap native map provider",
+  "name": "@xfun/map-amap",
+  "version": "1.0.0",
+  "description": "XFun SDK optional AMap native map provider (based on didi/dimina)",
   "main": "Index.ets",
   "author": {
-    "name": "doslin",
-    "email": "doslino@gmail.com",
-    "url": "https://github.com/didi/dimina"
+    "name": "PAtrickpp33",
+    "url": "https://github.com/PAtrickpp33/xfun-program"
   },
   "dependencies": {
-    "@didi-dimina/dimina": "1.8.0",
+    "@xfun/sdk": "1.0.0",
     "@amap/amap_lbs_map3d": "11.2.0",
     "@amap/amap_lbs_common": "11.2.0"
   },
   "license": "Apache-2.0",
-  "homepage": "https://github.com/didi/dimina",
-  "repository": "https://github.com/didi/dimina",
+  "homepage": "https://github.com/PAtrickpp33/xfun-program",
+  "repository": "https://github.com/PAtrickpp33/xfun-program",
   "compatibleSdkVersion": "12",
   "compatibleSdkType": "HarmonyOS"
 }
