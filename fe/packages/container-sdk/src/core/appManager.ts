@@ -145,7 +145,7 @@ export class AppManager {
 			query = {}
 		}
 		const info = (await dimina.getAppInfo(appId)) ?? {}
-		const { name, logo } = info
+		const { name, logo, menuActions } = info
 
 		if (destroy) { // 打开新小程序前销毁之前的小程序视图
 			// 先拍快照：view.destroy() 会同步经 removeApp() 从 apps 里删掉自己，
@@ -184,6 +184,7 @@ export class AppManager {
 			opener: opts.opener,
 			name,
 			logo,
+			menuActions,
 			pagePath,
 			query,
 			restoreStack, // 完整页面栈，用于刷新后静默恢复

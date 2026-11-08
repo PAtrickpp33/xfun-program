@@ -33,6 +33,19 @@ export interface ResolvedShell {
 export interface AppInfoMeta {
 	name?: string
 	logo?: string
+	/**
+	 * XFun：宿主自定义的胶囊菜单项（如收藏、分享）。每次打开菜单时调用，
+	 * 因此可以反映最新状态；排在「重新进入 / 关闭小程序」之前。
+	 */
+	menuActions?: () => HostMenuAction[]
+}
+
+/** XFun：宿主注入的胶囊菜单项。 */
+export interface HostMenuAction {
+	label: string
+	icon: string
+	danger?: boolean
+	onSelect: () => void
 }
 
 export type GetAppInfo = (appId: string) => Promise<AppInfoMeta | undefined | null> | AppInfoMeta | undefined | null
@@ -112,6 +125,8 @@ export interface OpenAppOptions {
  */
 export type ExtModuleHandler = (payload: {
 	event: string
+	/** XFun：发起调用的小程序 appId，由容器填写，小程序无法伪造。 */
+	appId: string
 	data?: unknown
 	success?: (result?: unknown) => void
 	fail?: (error: { errMsg: string }) => void

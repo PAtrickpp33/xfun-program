@@ -1,5 +1,5 @@
 import type { Application } from '../application/application.js'
-import type { BridgeOptions, MiniProgramReferrerInfo, PageStackEntry, StorageAdapter } from '../../types.js'
+import type { BridgeOptions, HostMenuAction, MiniProgramReferrerInfo, PageStackEntry, StorageAdapter } from '../../types.js'
 import type { ApiParams, SocketEventName } from '../../core/webSocketManager.js'
 import type { ReadWebFileOptions } from '../../core/webFileSystem.js'
 import type { AppWindowConfig, MergedPageConfig, PageConfig } from '../../utils/util.js'
@@ -74,6 +74,8 @@ export interface MiniAppOptions {
 	opener?: MiniApp | null
 	name?: string
 	logo?: string
+	/** XFun：宿主胶囊菜单项，见 AppInfoMeta.menuActions。 */
+	menuActions?: () => HostMenuAction[]
 	pagePath: string
 	query?: Record<string, string>
 	/** 完整页面栈，用于刷新后静默恢复 */
@@ -549,6 +551,7 @@ export class MiniApp {
 						handler: () => this.copyText(shareUrl, '链接已复制'),
 					}]
 				: []),
+			...this.hostMenuActions(),
 			{
 				label: '重新进入',
 				icon: '↻',
@@ -583,6 +586,26 @@ export class MiniApp {
 		quickActions.querySelectorAll<HTMLElement>('[data-quick-index]').forEach((node, index) => {
 			node.onclick = () => quickActionItems[index].handler()
 		})
+	}
+
+	/** XFun：宿主通过 getAppInfo().menuActions 注入的菜单项；宿主出错不影响菜单本身。 */
+	hostMenuActions(): Array<{ label: string, icon: string, danger?: boolean, handler: () => void }> {
+		let actions: HostMenuAction[] = []
+		try {
+			actions = this.appInfo.menuActions?.() ?? []
+		}
+		catch (error) {
+			console.error('[container] menuActions:', error)
+		}
+		return actions.slice(0, 4).map(action => ({
+			label: String(action.label),
+			icon: String(action.icon),
+			danger: action.danger === true,
+			handler: () => {
+				this.closeMiniAppMenu()
+				action.onSelect()
+			},
+		}))
 	}
 
 	openMiniAppMenu(): void {
@@ -3713,6 +3736,7 @@ export class MiniApp {
 		try {
 			handler({
 				event,
+				appId: this.appId,
 				data,
 				success: (res) => {
 					onSuccess?.(res)
@@ -3754,6 +3778,7 @@ export class MiniApp {
 		try {
 			const unsubscribe = handler?.({
 				event: event!,
+				appId: this.appId,
 				data: { isSustain: true },
 				success: res => onCallback?.(res),
 				fail: err => console.error(`[container] extOnBridge error (${eventKey}):`, err),

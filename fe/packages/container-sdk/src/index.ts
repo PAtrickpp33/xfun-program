@@ -71,6 +71,7 @@ export function createContainer(options: CreateContainerOptions | Record<string,
 
 export type {
 	AppInfoMeta,
+	HostMenuAction,
 	BridgeMessage,
 	ContainerInstance,
 	ContainerView,
