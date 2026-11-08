@@ -1,0 +1,13 @@
+XFun SDK
+Copyright 2026 PAtrickpp33
+
+This product is a modified version of Dimina (https://github.com/didi/dimina),
+Copyright the Dimina authors, licensed under the Apache License, Version 2.0.
+Modifications by PAtrickpp33 are listed in the git history of the `parley`
+branch of https://github.com/PAtrickpp33/xfun-program (commits after upstream
+e145e9d625d0544faad9915f317a87a6b4ec82f8).
+
+XFun is not affiliated with or endorsed by Didi or the Dimina project.
+
+Third-party components keep their own licenses; see third_party/*/LICENSE and
+fe/packages/container-sdk/THIRD-PARTY-NOTICES.md.
