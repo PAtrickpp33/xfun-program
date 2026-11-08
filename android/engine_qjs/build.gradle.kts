@@ -12,6 +12,7 @@ kotlin {
 android {
     namespace = "com.didi.dimina.engine.qjs"
     compileSdk = 35
+    ndkVersion = "27.1.12297006"
 
     defaultConfig {
         minSdk = 26
@@ -21,7 +22,7 @@ android {
         
         // Only generate ARM architecture .so files
         ndk {
-            abiFilters.add("arm64-v8a")
+            abiFilters.addAll(listOf("arm64-v8a", "x86_64"))
         }
     }
 

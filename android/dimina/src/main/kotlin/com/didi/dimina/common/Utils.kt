@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.didi.dimina.BuildConfig
+import com.didi.dimina.ui.container.DiminaActivity
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.didi.dimina.bean.App
@@ -219,6 +220,10 @@ object Utils {
         val safeAreaTop = statusBarHeight
         val safeAreaBottom = (fullWindowHeight - navigationBarHeight).coerceAtLeast(safeAreaTop)
         val safeAreaHeight = (safeAreaBottom - safeAreaTop).coerceAtLeast(0)
+        val customNavigation = (currentActivity as? DiminaActivity)?.usesCustomNavigation() == true
+        val viewportHeight = MiniProgramViewportGeometry.height(
+            fullWindowHeight, statusBarHeight, navigationBarHeight, customNavigation,
+        )
 
         return JSONObject().apply {
             put("brand", Build.BRAND)
@@ -227,7 +232,7 @@ object Utils {
             put("screenWidth", screenWidth)
             put("screenHeight", screenHeight)
             put("windowWidth", windowWidth)
-            put("windowHeight", safeAreaHeight)
+            put("windowHeight", viewportHeight)
             put("statusBarHeight", statusBarHeight)
             put("screenTop", statusBarHeight)
             put("safeArea", JSONObject().apply {

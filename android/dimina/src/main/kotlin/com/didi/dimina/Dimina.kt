@@ -161,6 +161,27 @@ class Dimina private constructor(context: Context) {
         miniApp.openApp(context, miniProgram)
     }
 
+    // Host integrations must not treat startActivity as proof that content loaded.
+    private var miniProgramReadyListener: ((String, org.json.JSONObject?) -> Unit)? = null
+
+    fun setMiniProgramReadyListener(listener: ((String, org.json.JSONObject?) -> Unit)?) {
+        miniProgramReadyListener = listener
+    }
+
+    internal fun notifyMiniProgramReady(appId: String, query: org.json.JSONObject?) {
+        miniProgramReadyListener?.invoke(appId, query)
+    }
+
+    private var miniProgramClosedListener: ((String, org.json.JSONObject?) -> Unit)? = null
+
+    fun setMiniProgramClosedListener(listener: ((String, org.json.JSONObject?) -> Unit)?) {
+        miniProgramClosedListener = listener
+    }
+
+    internal fun notifyMiniProgramClosed(appId: String, query: org.json.JSONObject?) {
+        miniProgramClosedListener?.invoke(appId, query)
+    }
+
     /** Hide an app while retaining its page stack and runtime for the next startMiniProgram. */
     @MainThread
     fun hideMiniProgram(appId: String): Boolean {

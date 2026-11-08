@@ -1605,13 +1605,16 @@ class DiminaActivity : ComponentActivity() {
         tabPageStates.values.forEach { it.webView = null }
     }
 
-    fun onDomReady() {
+    internal fun usesCustomNavigation(): Boolean = !showNavigationBar.value
+
+    fun onDomReady(query: JSONObject? = null) {
         // 6.隐藏加载动画
         LogUtils.d(
             tag,
             "Mini program initialization complete, hiding loading indicator"
         )
         isLoading.value = false
+        Dimina.getInstance().notifyMiniProgramReady(miniProgram.appId, query)
     }
 
     /**
@@ -1659,6 +1662,10 @@ class DiminaActivity : ComponentActivity() {
         if (!isMiniProgramInitialized) {
             super.onDestroy()
             return
+        }
+        if (miniProgram.root && isFinishing && !isChangingConfigurations && !preserveMiniAppOnDestroy) {
+            val query = miniProgram.path?.let { Utils.queryPath(it).query }
+            Dimina.getInstance().notifyMiniProgramClosed(miniProgram.appId, query)
         }
         if (isMiniProgramInitialized) {
             activityRegistry.unregister(miniProgram.appId, this)

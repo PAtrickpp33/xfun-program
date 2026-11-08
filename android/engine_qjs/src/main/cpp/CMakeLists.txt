@@ -71,7 +71,10 @@ dimina_configure_wasm(dimina)
 # Add linker option for 16KB page size compatibility
 # This helps ensure the .so is compatible with systems using 16KB page sizes,
 # especially when targeting older Android API levels where this isn't automatic.
-target_link_options(dimina PRIVATE "-Wl,-z,max-page-size=16384")
+# Compilation above enables LTO for every build type. Android Gradle uses
+# RelWithDebInfo for release native builds too; keep the driver in LTO mode
+# at link time so Android's emulated TLS lowering is preserved on x86_64.
+target_link_options(dimina PRIVATE -flto "-Wl,-z,max-page-size=16384")
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this

@@ -25,9 +25,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Dimina Android"
-include(":app")
 include(":engine_qjs")
 include(":dimina")
 
 // Optional vendor adapter: applications include :map-amap only when they choose AMap.
-include(":map-amap")

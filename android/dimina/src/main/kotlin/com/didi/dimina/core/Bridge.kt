@@ -296,7 +296,7 @@ class Bridge(
                     return handleApiInvocation(body)
                 } else if (type == "domReady") {
                     // 隐藏 Loading
-                    parent.onDomReady()
+                    parent.onDomReady(options.pathInfo.query)
                 }
             }
 
