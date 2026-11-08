@@ -62,13 +62,17 @@ function diminaServiceUrlPlugin() {
 //   pageFrame —— 渲染层 iframe 里跑的独立入口（挂 modDefine/modRequire、
 //                按需加载 vconsole、引入 @dimina/components 样式与 @dimina/render）。
 export default defineConfig({
+	// Library mode leaves Vue's Node environment branches intact. This SDK is
+	// also consumed directly by browsers, without a second application bundler.
+	define: { 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production') },
 	plugins: [diminaServiceUrlPlugin(), escapeRuntimeCssSourcemapPlugin()],
 	css: {
 		preprocessorOptions: {
 			scss: {
 				// miniApp.scss / webview.scss 直接用 $deviceWidth / logic()，不各自 @use，
 				// 依赖这里的全局注入。
-				additionalData: `@use "${fileURLToPath(new URL('./src/styles/funcs.scss', import.meta.url)).replace(/\\/g, '/')}" as *;`,
+				loadPaths: [fileURLToPath(new URL('./src/styles', import.meta.url))],
+				additionalData: '@use "funcs" as *;',
 			},
 		},
 	},
