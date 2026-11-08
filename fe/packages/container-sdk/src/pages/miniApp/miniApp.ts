@@ -49,6 +49,20 @@ type ApiCallback = (args?: unknown) => void
 const STORAGE_V2_DATA_PREFIX = '__dimina_storage_v2_data__'
 const STORAGE_V2_META_PREFIX = '__dimina_storage_v2_meta__'
 
+/** This app's stored entries for the Web Worker logic layer; see _createStorageSnapshot(). */
+export interface StorageSnapshot {
+	available: boolean
+	reason?: string
+	entries: Array<[string, string | null]>
+}
+
+/** Outcome of one worker storage write, reported back to the worker. */
+export interface StorageWriteResult {
+	seq: number | null
+	ok: boolean
+	errMsg?: string
+}
+
 interface StorageValueRecord {
 	version: 2
 	kind: 'value' | 'deleted'
@@ -731,6 +745,95 @@ export class MiniApp {
 		const data = this._decodeLegacyStorageValue(legacy)
 		storageAdapter.setItem(storageKey, this._serializeStorageValue(data))
 		return { found: true, data }
+	}
+
+	/** Removes this app's v2 entries and stops fallback to its ambiguous legacy entries. */
+	_clearStorageNamespace(storageAdapter: StorageAdapter): void {
+		const appIdPrefix = this._storageKeyPrefix()
+		const keysToRemove: string[] = []
+		for (let i = 0; i < storageAdapter.length; i++) {
+			const key = storageAdapter.key(i)
+			if (key?.startsWith(appIdPrefix)) {
+				keysToRemove.push(key)
+			}
+		}
+		keysToRemove.forEach(key => storageAdapter.removeItem(key))
+		storageAdapter.setItem(this._legacyStorageDisabledKey(), '1')
+	}
+
+	/**
+	 * The logic layer runs in a Web Worker, which cannot wait for this thread, so
+	 * `*Sync` storage reads are answered there from this snapshot of the app's
+	 * entries (sent before any app code runs). Values are JSON text; null marks a
+	 * stored `undefined`. `available: false` makes every storage call fail loudly.
+	 */
+	_createStorageSnapshot(): StorageSnapshot {
+		try {
+			const storageAdapter = this._getStorageAdapter()
+			// Writable now? A worker that trusted unwritable storage would lose data silently.
+			const probeKey = `${STORAGE_V2_META_PREFIX}${this.appId.length}:${this.appId}:probe`
+			storageAdapter.setItem(probeKey, '1')
+			storageAdapter.removeItem(probeKey)
+
+			const appIdPrefix = this._storageKeyPrefix()
+			const legacyPrefix = `${this.appId}_`
+			const legacyReadable = !this.appId.includes('_') && storageAdapter.getItem(this._legacyStorageDisabledKey()) !== '1'
+			const keys = new Set<string>()
+			for (let i = 0; i < storageAdapter.length; i++) {
+				const storedKey = storageAdapter.key(i)
+				if (!storedKey) continue
+				if (storedKey.startsWith(appIdPrefix)) keys.add(storedKey.slice(appIdPrefix.length))
+				else if (legacyReadable && storedKey.startsWith(legacyPrefix) && !storedKey.slice(legacyPrefix.length).includes('_')) {
+					keys.add(storedKey.slice(legacyPrefix.length))
+				}
+			}
+
+			const entries: Array<[string, string | null]> = []
+			for (const key of keys) {
+				try {
+					// Same precedence (v2 record, tombstone, legacy copy) as getStorage.
+					const value = this._readStorageValue(storageAdapter, key)
+					if (value.found) entries.push([key, value.data === undefined ? null : JSON.stringify(value.data)])
+				}
+				catch (error) {
+					console.warn(`[container] storage entry "${key}" of ${this.appId} is unreadable and was skipped: ${getErrorMessage(error)}`)
+				}
+			}
+			return { available: true, entries }
+		}
+		catch (error) {
+			return { available: false, reason: getErrorMessage(error), entries: [] }
+		}
+	}
+
+	/**
+	 * Persists one write that the worker has already applied to its copy
+	 * (see the service's storage/web-store.js). Writes arrive in call order.
+	 */
+	_persistStorageWrite(write: unknown): StorageWriteResult {
+		const op = (write && typeof write === 'object' ? write : {}) as { seq?: unknown, kind?: unknown, key?: unknown, json?: unknown }
+		const seq = typeof op.seq === 'number' ? op.seq : null
+		try {
+			const storageAdapter = this._getStorageAdapter()
+			if (op.kind === 'set' && typeof op.key === 'string' && (op.json === null || typeof op.json === 'string')) {
+				const data = op.json === null ? undefined : JSON.parse(op.json)
+				storageAdapter.setItem(this._storageKey(op.key), this._serializeStorageValue(data))
+			}
+			else if (op.kind === 'remove' && typeof op.key === 'string') {
+				storageAdapter.setItem(this._storageKey(op.key), this._serializeStorageTombstone())
+			}
+			else if (op.kind === 'clear') {
+				this._clearStorageNamespace(storageAdapter)
+			}
+			else {
+				throw new Error('invalid storage write')
+			}
+			return { seq, ok: true }
+		}
+		catch (error) {
+			console.error(`[container] storage write for ${this.appId} failed: ${getErrorMessage(error)}`)
+			return { seq, ok: false, errMsg: getErrorMessage(error) }
+		}
 	}
 
 	/**
@@ -3611,19 +3714,7 @@ export class MiniApp {
 		try {
 			// Only collision-free v2 keys can be enumerated safely. The marker
 			// suppresses fallback to ambiguous legacy-prefix entries after clear.
-			const appIdPrefix = this._storageKeyPrefix()
-			const keysToRemove: string[] = []
-			const storageAdapter = this._getStorageAdapter()
-
-			for (let i = 0; i < storageAdapter.length; i++) {
-				const key = storageAdapter.key(i)
-				if (key?.startsWith(appIdPrefix)) {
-					keysToRemove.push(key)
-				}
-			}
-
-			keysToRemove.forEach(key => storageAdapter.removeItem(key))
-			storageAdapter.setItem(this._legacyStorageDisabledKey(), '1')
+			this._clearStorageNamespace(this._getStorageAdapter())
 
 			onSuccess?.({ errMsg: 'clearStorage:ok' })
 		}

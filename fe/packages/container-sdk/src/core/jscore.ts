@@ -66,6 +66,9 @@ export class JSCore {
 			virtualFilePrefix: this.parent.appInfo.virtualFilePrefix,
 		})
 		this.worker = new Worker(serviceURL, { type: 'classic', name: workerName })
+		// Before anything else (messages to a worker are FIFO): the app's stored
+		// entries, so wx.*StorageSync can answer inside the worker.
+		this.postMessage({ type: 'storageSnapshot', body: this.parent._createStorageSnapshot() as unknown as BridgeMessage['body'] })
 
 		// 监听逻辑线程的消息
 		this.worker.onmessage = (e: MessageEvent<WorkerEvent>) => {
@@ -75,6 +78,13 @@ export class JSCore {
 				if (typeof requestId === 'string') {
 					this.#finishCallbackFlush(requestId)
 				}
+				return
+			}
+			if (msg.type === 'storageWrite') {
+				// Not routed through a page bridge: a write must persist even while
+				// its page is being unloaded or no page is current.
+				const result = this.parent._persistStorageWrite(msg.body)
+				this.postMessage({ type: 'storageWriteResult', body: result as unknown as BridgeMessage['body'] })
 				return
 			}
 			this.event.emit(msg.method as keyof JSCoreEvents, msg as unknown as BridgeMessage)

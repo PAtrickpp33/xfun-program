@@ -250,9 +250,11 @@ describe('storageSync controls whether/how the container touches localStorage', 
 		miniAppB.invokeApi('setStorage', { key: 'shared-key', data: 'from-B', success: 'b-success', fail: 'b-fail', complete: 'b-complete' })
 		await waitForTriggerCallback(workerIndexBeforeB, 'b-success')
 
-		expect(setItemSpy).toHaveBeenCalledTimes(2)
-		const keysUsed = setItemSpy.mock.calls.map((call: unknown[]) => call[0])
-		expect(keysUsed[0]).toBe('__dimina_storage_v2_data__20:wx-storage-collision:shared-key')
-		expect(keysUsed[1]).toBe('__dimina_storage_v2_data__20:wx-storage-collision:shared-key')
+		// Each launch also probes once that storage is writable (see _createStorageSnapshot).
+		const keysUsed = setItemSpy.mock.calls.map((call: unknown[]) => call[0] as string).filter((key: string) => !key.endsWith(':probe'))
+		expect(keysUsed).toEqual([
+			'__dimina_storage_v2_data__20:wx-storage-collision:shared-key',
+			'__dimina_storage_v2_data__20:wx-storage-collision:shared-key',
+		])
 	}, 10000)
 })

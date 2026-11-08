@@ -8,7 +8,7 @@ import { decodeDataFunctions, encodeDataFunctions } from './data-function'
 // Resource/lifecycle control must remain live while business work is suspended.
 const controlMessages = new Set([
 	'appHide', 'appShow', 'stackHide', 'stackShow', 'pageHide', 'pageShow', 'pageUnload',
-	'mU', 'flushCallbacks', 'hostEnvUpdate', 'loadResource', 'resourceLoaded',
+	'mU', 'flushCallbacks', 'hostEnvUpdate', 'loadResource', 'resourceLoaded', 'storageSnapshot',
 	'pageAttached', 'pageReady', 'mC', 'mA', 'mR', 'canvasCapabilities', 'canvasContextEvent', 'canvasTransfer', 'canvasTransferredDispose', 'resourceLoadFailed',
 ])
 
