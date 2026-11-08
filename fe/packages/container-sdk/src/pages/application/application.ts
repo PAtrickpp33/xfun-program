@@ -153,9 +153,15 @@ export class Application {
 	init(): void {
 		this.el = document.createElement('div')
 		this.el.classList.add('dimina-application')
+		this.updateShellGeometry()
 		this.window = document.createElement('div')
 		this.window.classList.add('dimina-native-window')
 		this.el.appendChild(this.window)
+	}
+
+	private updateShellGeometry(): void {
+		const height = this.shell.getStatusBarRect().height
+		this.el.style.setProperty('--dimina-status-bar-height', `${Math.max(0, Number.isFinite(height) ? height : 0)}px`)
 	}
 
 	initRootView(view: ContainerView): void {
@@ -176,6 +182,7 @@ export class Application {
 		if (!this.done) {
 			return
 		}
+		this.updateShellGeometry()
 
 		if (this.views[this.views.length - 1] === view) {
 			// 已经是栈顶：重复呈现同一个实例，跳过整套"退出/进入"转场——那套逻辑

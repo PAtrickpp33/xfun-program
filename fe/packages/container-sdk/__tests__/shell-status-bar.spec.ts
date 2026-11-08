@@ -24,6 +24,7 @@ describe('shell status bar adapter', () => {
 
 		expect(() => miniApp.getSystemInfoSync()).not.toThrow()
 		expect(miniApp.getSystemInfoSync().statusBarHeight).toBe(0)
+		expect(container.application.el.style.getPropertyValue('--dimina-status-bar-height')).toBe('0px')
 	}, 10000)
 
 	it('uses the injected getStatusBarRect instead of querying DOM shell markup', async () => {
@@ -35,6 +36,7 @@ describe('shell status bar adapter', () => {
 
 		expect(getStatusBarRect).toHaveBeenCalled()
 		expect(systemInfo.statusBarHeight).toBe(44)
+		expect(container.application.el.style.getPropertyValue('--dimina-status-bar-height')).toBe('44px')
 	}, 10000)
 
 	it('does not throw during app boot when shell.updateStatusBarColor is not provided', async () => {

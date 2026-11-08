@@ -16,7 +16,7 @@
 }
 
 .dimina-native-webview__navigation {
-	padding-top: logic(88px);
+	padding-top: var(--dimina-status-bar-height, 0px);
 	height: logic(88px);
 	box-sizing: content-box;
 	display: flex;
@@ -107,7 +107,7 @@
 
 .dimina-native-webview__body {
 	flex: 1;
-	padding-top: logic(176px);
+	padding-top: calc(var(--dimina-status-bar-height, 0px) + #{logic(88px)});
 	display: flex;
 }
 

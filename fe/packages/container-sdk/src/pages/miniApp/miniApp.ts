@@ -2539,33 +2539,11 @@ export class MiniApp {
 		return 'unknown'
 	}
 
-	getSystemInfoAsync(opts: ApiCallbackOptions): void {
-		const bar = this._getStatusBarRect()
-		const wb = this.parent!.el.querySelector<HTMLElement>('.dimina-native-webview__root')!.getBoundingClientRect()
-
-		const { success, complete } = opts
-
-		const { onSuccess, onComplete } = this._createApiCallbacks({ success, complete })
-
+	getSystemInfoAsync(opts: ApiCallbackOptions = {}): void {
+		const { onSuccess, onComplete } = this._createApiCallbacks(opts)
 		onSuccess?.({
-			statusBarHeight: bar.height,
-			brand: 'devtools',
-			mode: 'default',
-			model: 'web',
-			platform: 'devtools',
-			system: 'web',
-			deviceOrientation: 'portrait',
-			SDKVersion: '3.0.0',
-			language: 'zh_CN',
-			wifiEnabled: true,
-			safeArea: {
-				width: wb.width,
-				height: wb.height,
-				top: wb.top,
-				bottom: wb.bottom,
-				left: wb.left,
-				right: wb.right,
-			},
+			...this.getSystemInfoSync(),
+			errMsg: 'getSystemInfoAsync:ok',
 		})
 		onComplete?.()
 	}

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createContainer } from '../src/index.js'
 import { installFetchMock } from './fixtures/mock-fetch.js'
 
@@ -39,5 +39,26 @@ describe('system info viewport coordinates', () => {
 		expect(systemInfo.screenWidth).toBe(409)
 		expect(systemInfo.screenHeight).toBe(865)
 		expect(systemInfo.safeArea).toMatchObject({ right: 409, bottom: 865, width: 409 })
+
+		// The Worker can only request this information asynchronously. Its result must
+		// contain the same logical viewport, not omit dimensions or use CSS transforms.
+		const postMessage = vi.spyOn(miniApp.jscore!, 'postMessage')
+		miniApp.getSystemInfoAsync({ success: 'viewport-success', complete: 'viewport-complete' })
+		for (const id of ['viewport-success', 'viewport-complete']) {
+			expect(postMessage).toHaveBeenCalledWith({
+				type: 'triggerCallback',
+				body: {
+					id,
+					args: expect.objectContaining({
+						windowWidth: 409,
+						windowHeight: 865,
+						screenWidth: 409,
+						screenHeight: 865,
+						pixelRatio: window.devicePixelRatio,
+						errMsg: 'getSystemInfoAsync:ok',
+					}),
+				},
+			})
+		}
 	}, 10000)
 })
