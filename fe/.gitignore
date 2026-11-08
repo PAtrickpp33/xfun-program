@@ -6,5 +6,4 @@ dist-ssr
 *.lock
 .vscode
 package-lock.json
-pnpm-lock.yaml
 coverage
