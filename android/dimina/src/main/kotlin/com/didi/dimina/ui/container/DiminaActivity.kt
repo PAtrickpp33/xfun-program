@@ -551,6 +551,7 @@ class DiminaActivity : ComponentActivity() {
             finish()
             return
         }
+        applyTaskAppearance()
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -589,6 +590,26 @@ class DiminaActivity : ComponentActivity() {
         initializationJob = CoroutineScope(Dispatchers.Main).launch {
             initialize()
         }
+    }
+
+    /**
+     * Multi-task mode gives every mini program a task, and so a Recents card, of its own: show
+     * the mini program there. In shared-task mode the card belongs to the host and keeps its name.
+     */
+    private fun applyTaskAppearance() {
+        if (!Dimina.getInstance().isMultiTaskEnabled()) return
+        val appearance = try {
+            Dimina.getInstance().taskAppearance(miniProgram)
+        } catch (error: Exception) {
+            LogUtils.e(tag, "Task appearance provider failed for ${miniProgram.appId}: ${error.message}")
+            null
+        }
+        val label = MiniProgramTaskDescription.label(appearance, miniProgram.name) ?: return
+        setTaskDescription(
+            MiniProgramTaskDescription.build(
+                label, appearance?.icon, MiniProgramTaskDescription.primaryColor(appearance?.color ?: 0),
+            ),
+        )
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -1951,12 +1972,31 @@ class DiminaActivity : ComponentActivity() {
         // Queue options before another task can receive onStart.
         queueOpenerReturn(null)
         moveTaskToBack(true)
-        val returnTask = returnTasks[miniProgram.appId]
-        getSystemService(ActivityManager::class.java).appTasks
-            .firstOrNull { it.taskInfo.taskId == returnTask }?.moveToFront()
+        returnToOpenerTask()
+    }
+
+    /**
+     * Multi-task: brings back the task this mini program was opened from. Without it Android picks
+     * the next task itself, and after AppTask.moveToFront - how a running mini program is brought
+     * back - that is the launcher, which the system moves up behind the restored task.
+     */
+    private fun returnToOpenerTask() {
+        val returnTask = returnTasks[miniProgram.appId]?.takeIf { it != taskId } ?: return
+        try {
+            getSystemService(ActivityManager::class.java).appTasks
+                .firstOrNull { it.taskInfo.taskId == returnTask }?.moveToFront()
+        } catch (error: RuntimeException) {
+            LogUtils.e(tag, "Could not return to task $returnTask: ${error.message}")
+        }
     }
 
     private fun closeMiniProgram() {
+        // Multi-task: a mini program the user is looking at goes back to the task it was opened
+        // from before its own task ends, as hideMiniProgram does. Never from the background.
+        if (Dimina.getInstance().isMultiTaskEnabled() &&
+            lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.STARTED)) {
+            returnToOpenerTask()
+        }
         activityRegistry.closeAll(miniProgram.appId) { activity ->
             // 退出对齐微信的「小程序切入后台」：只派发 App.onHide，整栈页面都不收 onUnload。
             activity.pageStateTeardownReason = PageStateTeardown.EXIT
@@ -2622,11 +2662,11 @@ class DiminaActivity : ComponentActivity() {
         private fun findLiveActivity(appId: String): DiminaActivity? =
             activityRegistry.lastMatching(appId) { !it.isFinishing && !it.isDestroyed }
 
-        internal fun openMiniProgram(context: Activity, program: MiniProgram) {
+        internal fun openMiniProgram(context: Activity, program: MiniProgram): Dimina.LaunchResult {
             // Page navigation belongs to the current task; only app launches may reuse a task.
             if (!program.root) {
                 launch(context, program)
-                return
+                return Dimina.LaunchResult.STARTED
             }
             val existing = findLiveActivity(program.appId)
             if (existing?.taskId != context.taskId) returnTasks[program.appId] = context.taskId
@@ -2647,11 +2687,12 @@ class DiminaActivity : ComponentActivity() {
             if (resumeRetainedMiniProgram(context, program.appId)) {
                 // A new entry while already visible has no onStart transition to deliver it.
                 if (visibilityTracker.isForeground(program.appId)) existing?.dispatchMiniProgramShow()
-                return
+                return Dimina.LaunchResult.RESUMED
             }
             MiniApp.getInstance().consumePendingAppShowOptions(program.appId)
-            // A second tap can arrive before the first Activity's onCreate registers its task.
-            if (!pendingLaunches.add(program.appId)) return
+            // A second tap can arrive before the first Activity's onCreate registers its task;
+            // that first launch still reports ready.
+            if (!pendingLaunches.add(program.appId)) return Dimina.LaunchResult.STARTED
             try {
                 // Excluded tasks are trimmed by Android when another task becomes active.
                 // Keep a normal task so switching mini programs does not destroy its pages.
@@ -2662,6 +2703,7 @@ class DiminaActivity : ComponentActivity() {
                 pendingLaunches.remove(program.appId)
                 throw error
             }
+            return Dimina.LaunchResult.STARTED
         }
 
         @androidx.annotation.MainThread

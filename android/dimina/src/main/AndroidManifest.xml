@@ -22,8 +22,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
     <application>
+        <!-- Own affinity: in multi-task mode a mini program's task must never be picked up as the
+             host's task (singleTask or launcher starts look tasks up by affinity). Pages started
+             without NEW_TASK still join the caller's task, so shared-task mode is unaffected. -->
         <activity
             android:name=".ui.container.DiminaActivity"
+            android:taskAffinity="${applicationId}.xfun"
             android:windowSoftInputMode="adjustNothing"
             android:exported="false"
             android:screenOrientation="portrait"

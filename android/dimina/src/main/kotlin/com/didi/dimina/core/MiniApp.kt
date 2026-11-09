@@ -137,14 +137,14 @@ class MiniApp private constructor() {
      *
      * @param miniProgram The MiniProgram to open
      */
-    fun openApp(context: Activity, miniProgram: MiniProgram) {
+    fun openApp(context: Activity, miniProgram: MiniProgram): Dimina.LaunchResult {
         check(!RemoteUpdateManager.isPackageOperationInProgress(miniProgram.appId)) { "package operation in progress" }
         collectRetainedApps()
         // Initialize or get JsCore for this MiniProgram
         val alreadyRunning = isRunning(miniProgram.appId)
         getOrCreateJsCore(miniProgram.appId, context)
 
-        try {
+        return try {
             DiminaActivity.openMiniProgram(context, miniProgram)
         } catch (error: Exception) {
             // The runtime is registered before the Activity exists. A start that never happened

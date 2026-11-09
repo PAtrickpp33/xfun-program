@@ -128,6 +128,20 @@ val miniProgram = MiniProgram(
 Dimina.getInstance().startMiniProgram(context, miniProgram)
 ```
 
+多任务模式（`setEnableMultiTask(true)`，默认开启）下，每个小程序在最近任务里有自己的卡片。再次打开已在后台运行的小程序只会把它的任务移到前台，不会再触发 ready 回调；需要区分时改用 `launchMiniProgram`：
+
+```kotlin
+when (Dimina.getInstance().launchMiniProgram(activity, miniProgram)) {
+    Dimina.LaunchResult.STARTED -> { /* 等待 setMiniProgramReadyListener 回调 */ }
+    Dimina.LaunchResult.RESUMED -> { /* 已在前台，页面早已加载 */ }
+}
+
+// 最近任务卡片默认显示 MiniProgram.name 和宿主图标，可按小程序自定义
+Dimina.getInstance().setTaskAppearanceProvider { program ->
+    MiniProgramTaskAppearance(label = program.name, icon = iconBitmapFor(program.appId))
+}
+```
+
 宿主主动关闭小程序时，调用生命周期安全的关闭入口：
 
 ```kotlin

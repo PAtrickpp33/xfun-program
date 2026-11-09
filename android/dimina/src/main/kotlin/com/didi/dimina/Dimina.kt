@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.annotation.MainThread
 import com.didi.dimina.api.ext.ExtModuleHandler
 import com.didi.dimina.bean.MiniProgram
+import com.didi.dimina.bean.MiniProgramTaskAppearance
 import com.didi.dimina.common.LogUtils
 import com.didi.dimina.common.PathUtils
 import com.didi.dimina.common.StoreUtils
@@ -157,9 +158,43 @@ class Dimina private constructor(context: Context) {
      * @param miniProgram 要启动的小程序对象
      */
     fun startMiniProgram(context: Activity, miniProgram: MiniProgram) {
-        val miniApp = MiniApp.getInstance()
-        miniApp.openApp(context, miniProgram)
+        launchMiniProgram(context, miniProgram)
     }
+
+    /** What [launchMiniProgram] did. */
+    enum class LaunchResult {
+        /** A page stack is being created; the ready listener fires once it has loaded. */
+        STARTED,
+
+        /**
+         * The running instance, or the task it was retained in, was brought to the front.
+         * Its pages were already loaded, so no ready event follows.
+         */
+        RESUMED,
+    }
+
+    /**
+     * Same as [startMiniProgram], but tells the host whether a ready event is still coming:
+     * with multi-task enabled, opening a mini program that runs in its own task only brings
+     * that task to the front.
+     */
+    fun launchMiniProgram(context: Activity, miniProgram: MiniProgram): LaunchResult =
+        MiniApp.getInstance().openApp(context, miniProgram)
+
+    private var taskAppearanceProvider: ((MiniProgram) -> MiniProgramTaskAppearance?)? = null
+
+    /**
+     * Customizes the Recents card of each mini program when multi-task is enabled, where every
+     * mini program runs in a task of its own. Without a provider the card shows
+     * [MiniProgram.name] and the host's launcher icon. Called on the main thread whenever a
+     * mini-program page Activity is created.
+     */
+    fun setTaskAppearanceProvider(provider: ((MiniProgram) -> MiniProgramTaskAppearance?)?) {
+        taskAppearanceProvider = provider
+    }
+
+    internal fun taskAppearance(program: MiniProgram): MiniProgramTaskAppearance? =
+        taskAppearanceProvider?.invoke(program)
 
     // Host integrations must not treat startActivity as proof that content loaded.
     private var miniProgramReadyListener: ((String, org.json.JSONObject?) -> Unit)? = null

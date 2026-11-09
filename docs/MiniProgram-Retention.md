@@ -187,3 +187,11 @@ Harmony 的 `customLaunchPageCallBack` 自定义挂载页面没有框架路由�
 任务根 Intent 的 data URI 保存 appId 及销毁代次标记，不包含业务路径与 query。[Android 12 的 `Task.fillTaskInfo`](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android12-release/services/core/java/com/android/server/wm/Task.java) 在剥离 extras 时使用 `cloneFilter()`，因此不能仅依赖 Parcelable extras 识别任务。只有组件属于 Dimina 且身份匹配的任务可作为系统查找候选；同一进程主动销毁前的任务标记失效。旧任务没有标识且其 extras 已丢失时无法可靠判断归属，不按名称或页面地址猜测匹配。
 
 这保证任务复用的查找不依赖业务 query；系统杀死进程后 JS 运行时仍须重新初始化，不能承诺保留进程内 globalData。关闭多任务模式时仍遵循原有宿主共享栈策略。
+
+复用已有任务时不会重新加载页面，ready 回调也不会再次触发。宿主若在打开后等待 ready（例如设置加载超时），应调用 `launchMiniProgram`，在返回 `LaunchResult.RESUMED` 时直接结束等待；`startMiniProgram` 行为不变，只是不返回结果。
+
+多任务模式下，每个页面 Activity 创建时都会设置所属任务的 `TaskDescription`：标题默认取 `MiniProgram.name`，图标默认使用宿主图标，宿主可通过 `setTaskAppearanceProvider` 按小程序提供标题、图标和颜色。关闭多任务模式时小程序页面位于宿主任务内，不修改任务描述，避免把宿主卡片改成小程序名称。
+
+`DiminaActivity` 使用独立的 `taskAffinity`（`${applicationId}.xfun`）。系统按 affinity 为 `singleTask` 或桌面图标启动的宿主 Activity 查找任务；若与宿主相同，宿主任务不存在而小程序任务仍在时（例如 Android 11 及以下在宿主首页按返回键结束了宿主），宿主页面会被放进小程序的任务。未带 `NEW_TASK` 启动的页面仍进入调用方任务，共享栈模式不受影响。
+
+多任务模式下，小程序退出时（`exitMiniProgram`、`navigateBackMiniProgram` 或宿主调用 `closeMiniProgram`），若页面仍在前台，先把打开它的任务移到前台，再结束自己的任务，与返回键隐藏一致。否则由系统挑选下一个任务；小程序是经 `AppTask.moveToFront` 带回前台的，系统会先把桌面移到它后面，用户就会直接回到桌面。后台实例被关闭或回收时不移动任何任务。被回收实例的任务仍留在最近任务里，再次打开时在原任务内冷启动，不会出现第二张卡片。
